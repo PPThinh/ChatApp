@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/ppthinh/ChatApp/services/user-service/internal/genproto";
+
+service UserService {
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (User) {}
+  rpc GetUserByPhoneNumber(GetUserByPhoneNumberRequest) returns (User) {}
+  rpc CreateUser(CreateUserRequest) returns (User) {}
+  rpc UpdateUser(UpdateUserRequest) returns (User) {}
+  rpc DeleteUser(DeleteUserRequest) returns (Empty) {}
+}
+
+message User {
+  string name = 1;
+  string email = 2;
+  string phone_number = 3;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByPhoneNumberRequest {
+  string phone_number = 1;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message Empty {}
+
