@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	model "github.com/ppthinh/ChatApp/services/user-service/internal/models"
+	"github.com/ppthinh/ChatApp/services/user-service/internal/utils"
 	"gorm.io/gorm"
 )
 
@@ -53,8 +54,17 @@ func (ur *userRepository) GetUserByPhoneNumber(phoneNumber string) (*model.User,
 }
 
 func (ur *userRepository) Create(user *model.User) error {
+	user.ID = uuid.New()
+	hashedPassword, err := utils.HashPassword(user.Password)
+	if err != nil {
+		return err
+	}
+
+	// Gán password đã hash vào user
+	user.Password = string(hashedPassword)
+
 	var existingUser model.User
-	err := ur.db.Create(user).Error
+	err = ur.db.Create(user).Error
 	if err != nil {
 		if err := ur.db.Where("email = ?", user.Email).First(&existingUser).Error; err == nil {
 			return ErrEmailExist
@@ -92,26 +102,27 @@ func (ur *userRepository) Update(user *model.User) error {
 	}).Error
 }
 func (ur *userRepository) Delete(userID uuid.UUID) error {
-	return ur.db.Transaction(func(tx *gorm.DB) error {
-		// xoa user trong danh sach ban be cua user & user khac
-		err := tx.Where("user_id = ? or friend_id = ?", userID, userID).Delete(&model.FriendShip{}).Error
-		if err != nil {
-			return err
-		}
-
-		// xoa user trong danh sach yeu cau ket ban cua user & user khac
-		err = tx.Where("from_user_id = ? or to_user_id = ?", userID, userID).Delete(&model.FriendRequest{}).Error
-		if err != nil {
-			return err
-		}
-
-		err = tx.Delete(&model.User{}, userID).Error
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
+	//return ur.db.Transaction(func(tx *gorm.DB) error {
+	//	// xoa user trong danh sach ban be cua user & user khac
+	//	err := tx.Where("user_id = ? or friend_id = ?", userID, userID).Delete(&model.FriendShip{}).Error
+	//	if err != nil {
+	//		return err
+	//	}
+	//
+	//	// xoa user trong danh sach yeu cau ket ban cua user & user khac
+	//	err = tx.Where("from_user_id = ? or to_user_id = ?", userID, userID).Delete(&model.FriendRequest{}).Error
+	//	if err != nil {
+	//		return err
+	//	}
+	//
+	//	err = tx.Delete(&model.User{}, userID).Error
+	//	if err != nil {
+	//		return err
+	//	}
+	//
+	//	return nil
+	//})
+	return ur.db.Delete(&model.User{}, userID).Error
 }
 
 // -----friendship

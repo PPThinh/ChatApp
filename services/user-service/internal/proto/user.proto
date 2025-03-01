@@ -2,14 +2,16 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "github.com/ppthinh/ChatApp/services/user-service/internal/genproto";
+option go_package = "./genproto";
 
 service UserService {
   rpc GetUserByEmail(GetUserByEmailRequest) returns (User) {}
   rpc GetUserByPhoneNumber(GetUserByPhoneNumberRequest) returns (User) {}
-  rpc CreateUser(CreateUserRequest) returns (User) {}
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
   rpc UpdateUser(UpdateUserRequest) returns (User) {}
   rpc DeleteUser(DeleteUserRequest) returns (Empty) {}
+
+  rpc GetUserForAuth(GetUserByEmailRequest) returns (UserForAuth) {}
 }
 
 message User {
@@ -27,20 +29,33 @@ message GetUserByPhoneNumberRequest {
 }
 
 message CreateUserRequest {
-  string username = 1;
+  string name = 1;
   string password = 2;
   string email = 3;
+  string phone_number = 4;
+}
+
+message CreateUserResponse {
+  string user_id = 1;
+  bool success = 2;
+  string error_message = 3;
 }
 
 message UpdateUserRequest {
-  string id = 1;
-  string username = 2;
+  string name = 1;
+  string password = 2;
   string email = 3;
+  string phone_number = 4;
 }
 
 message DeleteUserRequest {
-  string id = 1;
+  string user_id = 1;
 }
 
 message Empty {}
 
+message UserForAuth {
+  string user_id = 1;
+  string email = 2;
+  string password = 3;
+}

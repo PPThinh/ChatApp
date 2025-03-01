@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+grpc:
+  auth:
+    address: localhost:50051
+  user:
+    address: localhost:50052

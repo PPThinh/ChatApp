@@ -1,0 +1,7 @@
+grpc:
+  port: 50051
+user-grpc:
+  port: localhost:50052
+
+jwt:
+  secret-key: 12339eb7cda12807877d522495b55083d5c1e57757b55d5a4e1ba20b5794de2e

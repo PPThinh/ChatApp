@@ -12,8 +12,8 @@ type User struct {
 	Email       string    `gorm:"type:varchar(100);unique" json:"email"`
 	PhoneNumber string    `gorm:"type:varchar(15);unique" json:"phone_number"`
 	Password    string    `json:"type:varchar(255);not null" json:"password"`
-	CreateAt    time.Time `json:"create_at"`
-	UpdateAt    time.Time `json:"update_at"`
+	CreateAt    time.Time `gorm:"autoCreateTime" json:"create_at"`
+	UpdateAt    time.Time `gorm:"autoUpdateTime" json:"update_at"`
 }
 
 type PublicUser struct {

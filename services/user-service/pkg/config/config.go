@@ -7,8 +7,8 @@ import (
 )
 
 type Config struct {
-	DSN  string
-	Port string
+	DSN      string
+	GRPCPort string
 }
 
 func LoadConfig() *Config {
@@ -34,7 +34,7 @@ func LoadConfig() *Config {
 	)
 
 	return &Config{
-		DSN:  mysqlDSN,
-		Port: viper.GetString("server.port"),
+		DSN:      mysqlDSN,
+		GRPCPort: viper.GetString("grpc.port"),
 	}
 }
